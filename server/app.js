@@ -6,7 +6,6 @@ const { notFound, errorHandler } = require('./middleware/error');
 
 const app = express();
 
-// CLIENT_URL can hold several origins separated by commas
 const allowedOrigins = [
   "http://localhost:5173",
   process.env.CLIENT_URL,
@@ -27,6 +26,10 @@ app.use(
     credentials: true,
   })
 );
+
+// Read JSON and form data from requests (must come before the routes)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to MongoDB before handling any request (works locally and on Vercel)
 app.use(async (req, res, next) => {
