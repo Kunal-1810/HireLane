@@ -11,10 +11,10 @@ exports.apply = async (req, res, next) => {
     const application = await Application.create({
       job: job._id,
       candidate: req.user._id,
-      resumeUrl: `/uploads/${req.file.filename}`,
+      resume: { data: req.file.buffer, contentType: req.file.mimetype, filename: req.file.originalname },
       coverLetter: req.body.coverLetter || '',
     });
-    res.status(201).json({ application });
+    res.status(201).json({ application: { _id: application._id, job: application.job, status: application.status } });
   } catch (err) {
     if (err.code === 11000) return res.status(400).json({ message: 'You have already applied to this job' });
     next(err);
@@ -57,5 +57,23 @@ exports.updateStatus = async (req, res, next) => {
     application.status = status;
     await application.save();
     res.json({ application });
+  } catch (err) { next(err); }
+};
+
+// GET /api/applications/:id/resume  -> streams the PDF (candidate who applied, or the recruiter who owns the job)
+exports.getResume = async (req, res, next) => {
+  try {
+    const application = await Application.findById(req.params.id).select('+resume.data').populate('job', 'postedBy');
+    if (!application || !application.resume?.data) return res.status(404).json({ message: 'Resume not found' });
+
+    const isOwnerCandidate = application.candidate.equals(req.user._id);
+    const isOwnerRecruiter = application.job && application.job.postedBy.equals(req.user._id);
+    if (!isOwnerCandidate && !isOwnerRecruiter) return res.status(403).json({ message: 'You cannot view this resume' });
+
+    res.set({
+      'Content-Type': application.resume.contentType || 'application/pdf',
+      'Content-Disposition': `inline; filename="${application.resume.filename || 'resume.pdf'}"`,
+    });
+    res.send(application.resume.data);
   } catch (err) { next(err); }
 };

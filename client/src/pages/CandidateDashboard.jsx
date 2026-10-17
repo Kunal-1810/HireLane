@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api, { errorMessage, API_URL } from '../api';
+import api, { errorMessage, openResume } from '../api';
 
 export default function CandidateDashboard() {
   const [apps, setApps] = useState(null);
@@ -28,7 +28,7 @@ export default function CandidateDashboard() {
                   <td>{a.job ? <Link to={`/jobs/${a.job._id}`}>{a.job.title}</Link> : 'Job removed'}</td>
                   <td>{a.job?.company}</td>
                   <td>{new Date(a.createdAt).toLocaleDateString()}</td>
-                  <td><a href={`${API_URL}${a.resumeUrl}`} target="_blank" rel="noreferrer">View</a></td>
+                  <td><button className="link" onClick={() => openResume(a._id)}>View</button></td>
                   <td><span className={`status ${a.status}`}>{a.status}</span></td>
                 </tr>
               ))}

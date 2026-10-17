@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import api, { errorMessage, API_URL } from '../api';
+import api, { errorMessage, openResume } from '../api';
 
 const STATUSES = ['applied', 'shortlisted', 'rejected', 'hired'];
 
@@ -39,7 +39,7 @@ export default function Applicants() {
                   <td>{a.candidate.name}</td>
                   <td>{a.candidate.email}</td>
                   <td>{new Date(a.createdAt).toLocaleDateString()}</td>
-                  <td><a href={`${API_URL}${a.resumeUrl}`} target="_blank" rel="noreferrer">Open PDF</a></td>
+                  <td><button className="link" onClick={() => openResume(a._id)}>Open PDF</button></td>
                   <td className="cover">{a.coverLetter || 'None'}</td>
                   <td>
                     <select value={a.status} onChange={(e) => changeStatus(a._id, e.target.value)}>
