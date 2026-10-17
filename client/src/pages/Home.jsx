@@ -17,10 +17,14 @@ export default function Home() {
     try {
       const params = { ...f, page: p };
       Object.keys(params).forEach((k) => !params[k] && delete params[k]);
-      const res = await api.get('/jobs', { params });
-      setData(res.data);
-    } catch (err) {
-      setError(errorMessage(err));
+      
+    const res = await api.get('/jobs', { params });
+if (!Array.isArray(res.data?.jobs)) throw new Error('API_UNREACHABLE');
+setData(res.data);
+} catch (err) {
+  setError(err.message === 'API_UNREACHABLE'
+    ? 'Cannot reach the server. Check that the API is deployed and VITE_API_URL is set.'
+    : errorMessage(err));  
     } finally {
       setLoading(false);
     }
