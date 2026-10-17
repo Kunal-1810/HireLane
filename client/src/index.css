@@ -34,6 +34,11 @@ h3 { margin: 0; font-size: 1.05rem; }
 .nav-links a:not(.btn) { color: var(--ink); font-weight: 500; }
 .nav-links a.active { color: var(--cobalt); font-weight: 700; }
 .nav-user { color: var(--muted); font-size: 0.9rem; }
+.logo {
+  height: 40px;
+  width: auto;
+  padding :5px;
+}
 
 /* Buttons */
 .btn { display: inline-block; background: var(--cobalt); color: #fff; border: 0; padding: 10px 20px; border-radius: 8px; font: inherit; font-weight: 700; cursor: pointer; }

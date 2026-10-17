@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from "../assets/hirelane-logo.svg";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -10,7 +11,8 @@ export default function Navbar() {
   return (
     <header className="nav">
       <div className="container nav-inner">
-        <Link to="/" className="brand">HireLane</Link>
+        <Link to="/" className="brand"> 
+      <img src={logo} alt="HireLane" className="logo" /></Link>
         <nav className="nav-links">
           <NavLink to="/" end>Jobs</NavLink>
           {user?.role === 'candidate' && <NavLink to="/my-applications">My applications</NavLink>}
