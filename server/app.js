@@ -8,7 +8,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  process.env.CLIENT_URL,
+  (process.env.CLIENT_URL || "").replace(/\/$/, ""),
 ];
 
 app.use(
@@ -17,7 +17,7 @@ app.use(
       if (
         !origin ||
         allowedOrigins.includes(origin) ||
-        /^https:\/\/hirelanee.*\.vercel\.app$/.test(origin)
+        /^https:\/\/hire-?lane[a-z0-9-]*-kunal-f256\.vercel\.app$/.test(origin)
       ) {
         return callback(null, true);
       }
